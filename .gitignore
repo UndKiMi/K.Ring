@@ -1,0 +1,109 @@
+# ═══════════════════════════════════════════════════════════════
+# GITIGNORE K.RING BOT - SÉCURITÉ RENFORCÉE
+# ═══════════════════════════════════════════════════════════════
+
+# ┌─────────────────────────────────────────────────────────────┐
+# │ SÉCURITÉ CRITIQUE - Secrets et Credentials                  │
+# └─────────────────────────────────────────────────────────────┘
+
+# Variables d'environnement (contient les tokens)
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# Fichiers de backup potentiellement sensibles
+*.env.backup
+*.env.old
+.env.*
+
+# ┌─────────────────────────────────────────────────────────────┐
+# │ Dépendances                                                  │
+# └─────────────────────────────────────────────────────────────┘
+
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ┌─────────────────────────────────────────────────────────────┐
+# │ Fichiers de Configuration Générés                           │
+# └─────────────────────────────────────────────────────────────┘
+
+# Configuration par serveur (peut contenir des IDs sensibles)
+config/guild-config.json
+config/*.local.json
+
+# ┌─────────────────────────────────────────────────────────────┐
+# │ Logs (peuvent contenir des informations sensibles)          │
+# └─────────────────────────────────────────────────────────────┘
+
+logs/*.log
+logs/**/*.log
+*.log
+
+# Logs de sécurité
+logs/security/
+
+# ┌─────────────────────────────────────────────────────────────┐
+# │ Fichiers Système                                            │
+# └─────────────────────────────────────────────────────────────┘
+
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# ┌─────────────────────────────────────────────────────────────┐
+# │ IDE et Éditeurs                                             │
+# └─────────────────────────────────────────────────────────────┘
+
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.atom/
+
+# ┌─────────────────────────────────────────────────────────────┐
+# │ Fichiers de Debug et Temporaires                            │
+# └─────────────────────────────────────────────────────────────┘
+
+*.tmp
+*.temp
+.cache/
+.temp/
+
+# ┌─────────────────────────────────────────────────────────────┐
+# │ Fichiers de Sauvegarde                                      │
+# └─────────────────────────────────────────────────────────────┘
+
+*.bak
+*.backup
+*~
+
+# ┌─────────────────────────────────────────────────────────────┐
+# │ Données Sensibles Potentielles                              │
+# └─────────────────────────────────────────────────────────────┘
+
+# Dumps de base de données
+*.sql
+*.sqlite
+*.db
+
+# Fichiers de clés
+*.pem
+*.key
+*.cert
+*.crt
+
+# Archives potentiellement sensibles
+*.zip
+*.tar.gz
+*.rar
+
+# ═══════════════════════════════════════════════════════════════
+# FIN DU GITIGNORE
+# ═══════════════════════════════════════════════════════════════

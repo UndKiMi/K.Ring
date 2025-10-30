@@ -1,0 +1,31 @@
+{
+  "jokes": [
+    "Pourquoi les développeurs préfèrent-ils le mode sombre ? Parce que la lumière attire les bugs ! 🐛",
+    "Comment appelle-t-on un bug qui survit à la production ? Une fonctionnalité ! 😄",
+    "Il y a 10 types de personnes dans ce monde : ceux qui comprennent le binaire et ceux qui ne le comprennent pas.",
+    "Un programmeur va au supermarché. Sa femme lui dit : 'Achète un pain, et si ils ont des œufs, prends-en 6.' Il revient avec 6 pains. 'Pourquoi 6 pains ?' demande-t-elle. 'Ils avaient des œufs !' 🥖",
+    "Pourquoi les programmeurs confondent-ils Halloween et Noël ? Parce que Oct 31 = Dec 25 ! 🎃🎄",
+    "Un SQL query entre dans un bar, s'approche de deux tables et demande : 'Je peux me joindre à vous ?' 🍺",
+    "Combien de programmeurs faut-il pour changer une ampoule ? Aucun, c'est un problème matériel ! 💡",
+    "La meilleure chose à propos d'un booléen, c'est que même si vous avez tort, vous n'êtes qu'à un bit de la vérité.",
+    "Un développeur est quelqu'un qui résout un problème que vous ne saviez pas avoir, d'une manière que vous ne comprenez pas. 🤓",
+    "Pourquoi les programmeurs n'aiment-ils pas la nature ? Trop de bugs et pas assez de documentation ! 🌳"
+  ],
+  "tips": [
+    "💡 **Conseil du jour** : Commentez votre code comme si la personne qui le maintiendra était un psychopathe violent qui sait où vous habitez.",
+    "🚀 **Astuce** : Utilisez des noms de variables descriptifs. Votre futur vous vous remerciera !",
+    "⚡ **Pro tip** : Faites des commits réguliers avec des messages clairs. 'fix stuff' n'est pas un bon message de commit !",
+    "🎯 **Best practice** : Testez votre code avant de le déployer. Les utilisateurs ne sont pas des bêta-testeurs !",
+    "🔒 **Sécurité** : Ne hardcodez jamais vos secrets dans le code. Utilisez des variables d'environnement !",
+    "📚 **Apprentissage** : Lisez le code des autres. C'est l'une des meilleures façons d'apprendre de nouvelles techniques.",
+    "🐛 **Debug** : Quand vous êtes bloqué, expliquez votre problème à un canard en plastique. Ça marche vraiment !",
+    "⏰ **Productivité** : Prenez des pauses régulières. Un esprit reposé code mieux qu'un esprit fatigué.",
+    "🤝 **Collaboration** : Faites des revues de code. Deux paires d'yeux valent mieux qu'une !",
+    "🎨 **Clean Code** : Écrivez du code pour les humains d'abord, pour les machines ensuite.",
+    "📖 **Documentation** : Un README bien écrit vaut mille lignes de code commentées.",
+    "🔄 **Refactoring** : N'ayez pas peur de refactoriser. Le code parfait n'existe pas du premier coup.",
+    "🌟 **Innovation** : Restez curieux et explorez de nouvelles technologies régulièrement.",
+    "💪 **Persévérance** : Chaque expert a été un jour un débutant. Continuez à apprendre !",
+    "🎓 **Formation** : Investissez dans votre apprentissage continu. La technologie évolue rapidement !"
+  ]
+}
