@@ -18,25 +18,13 @@
  */
 
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { create, all } from 'mathjs';
+import * as mathjs from 'mathjs';
 import logger from '../utils/logger.js';
 
-// Configuration sécurisée de mathjs
-const math = create(all, {
+// Configuration sécurisée de mathjs avec BigNumber
+const math = mathjs.create(mathjs.all, {
     number: 'BigNumber',      // Support des très grands nombres
     precision: 64,            // Précision de 64 chiffres
-});
-
-// Désactiver les fonctions dangereuses
-const safeMath = math.create({
-    // Importer uniquement les fonctions mathématiques sûres
-    ...all,
-    // Désactiver les fonctions potentiellement dangereuses
-    import: undefined,
-    createUnit: undefined,
-    evaluate: undefined,
-    parse: undefined,
-    compile: undefined,
 });
 
 // Configuration de sécurité
