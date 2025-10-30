@@ -7,42 +7,22 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
-    "deploy": "node src/deploy-commands.js",
-    "lint": "eslint src/**/*.js",
-    "lint:fix": "eslint src/**/*.js --fix",
-    "format": "prettier --write \"src/**/*.js\"",
-    "format:check": "prettier --check \"src/**/*.js\"",
-    "validate": "npm run format:check && npm run lint",
-    "prepare": "node -e \"try { require('husky').install() } catch (e) {}\""
+    "deploy": "node src/deploy-commands.js"
   },
   "keywords": [
     "discord",
     "bot",
-    "discord.js",
-    "k-ring",
-    "alan-turing"
+    "discord.js"
   ],
   "author": "K.Ring Team",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/k-ring-bot.git"
-  },
-  "bugs": {
-    "url": "https://github.com/yourusername/k-ring-bot/issues"
-  },
   "dependencies": {
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
     "mathjs": "^12.4.0",
     "node-cron": "^3.0.3"
   },
-  "devDependencies": {
-    "eslint": "^8.57.0",
-    "prettier": "^3.2.5"
-  },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node": ">=18.0.0"
   }
 }
