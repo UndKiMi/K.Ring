@@ -27,7 +27,7 @@
 ## 🌟 Fonctionnalités
 
 ### Commandes Slash
-- `/info [sujet]` - 🆕 Recherche et publie une actualité réelle sur le sujet dans #infos
+- `/info [sujet]` - Publie une information dans le salon #infos
 - `/calc [expression]` - Évalue des expressions mathématiques complexes
 - `/setwelcome [role]` - Configure le rôle attribué automatiquement aux nouveaux membres (Admin)
 - `/status` - Affiche les statistiques et fonctionnalités du bot
