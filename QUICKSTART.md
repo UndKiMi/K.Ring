@@ -1,12 +1,11 @@
-# 🚀 Guide de Démarrage Rapide - K.Ring Bot
+# 🚀 Guide de Démarrage Rapide
 
-Ce guide vous permettra de lancer le bot en quelques minutes.
+Démarrez avec K.Ring en 5 minutes !
 
-## ⚡ Installation Express
+## Prérequis
 
-### 1. Prérequis
-- Node.js 18+ installé ([télécharger ici](https://nodejs.org/))
-- Un compte Discord
+- Node.js 18+ installé
+- Un bot Discord créé sur le [Developer Portal](https://discord.com/developers/applications)
 
 ### 2. Configuration Discord
 

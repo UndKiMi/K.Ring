@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  k-ring-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: k-ring-bot
+    restart: unless-stopped
+    
+    # Variables d'environnement depuis .env
+    env_file:
+      - .env
+    
+    # Volumes pour persister les données
+    volumes:
+      - ./logs:/app/logs
+      - ./config:/app/config
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Resource limits (optionnel)
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    
+    # Network (si nécessaire pour d'autres services)
+    # networks:
+    #   - k-ring-network
+
+# networks:
+#   k-ring-network:
+#     driver: bridge

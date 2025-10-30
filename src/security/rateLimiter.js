@@ -5,26 +5,15 @@
  */
 
 import logger from '../utils/logger.js';
+import config from '../config/index.js';
 
 class RateLimiter {
     constructor() {
         // Stockage des tentatives par utilisateur
         this.userAttempts = new Map();
         
-        // Configuration des limites
-        this.limits = {
-            // Limite globale: 5 commandes par 10 secondes par utilisateur
-            global: {
-                maxAttempts: 5,
-                windowMs: 10000
-            },
-            // Limites spécifiques par commande
-            commands: {
-                calc: { maxAttempts: 3, windowMs: 5000 },      // 3 calculs par 5s
-                info: { maxAttempts: 2, windowMs: 10000 },     // 2 infos par 10s
-                setwelcome: { maxAttempts: 1, windowMs: 30000 } // 1 config par 30s
-            }
-        };
+        // Configuration des limites depuis config centralisée
+        this.limits = config.rateLimit;
 
         // Nettoyage automatique toutes les 5 minutes
         setInterval(() => this.cleanup(), 300000);

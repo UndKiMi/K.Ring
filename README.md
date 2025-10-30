@@ -1,18 +1,28 @@
-# K.Ring Bot Discord 🤖🔒
+# K.Ring Bot Discord 🤖
 
-**K.Ring** est un bot Discord professionnel, modulaire et **sécurisé**, nommé en hommage à Alan Turing. Il offre des fonctionnalités avancées de gestion de serveur, calculs mathématiques, système de bienvenue, et publications automatiques.
+**K.Ring** est un bot Discord professionnel, modulaire et **production-ready**, nommé en hommage à Alan Turing. Construit avec une architecture scalable et des pratiques de développement modernes.
 
-## 🛡️ Sécurité Production-Ready
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
+[![Discord.js](https://img.shields.io/badge/discord.js-v14-blue)](https://discord.js.org/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Code Style](https://img.shields.io/badge/code%20style-prettier-ff69b4)](https://prettier.io/)
 
-Ce bot intègre **toutes les protections de sécurité** recommandées pour un déploiement en production 2025:
-- ✅ Protection anti-raid et anti-spam
-- ✅ Rate limiting complet
-- ✅ Validation stricte des entrées
-- ✅ Logging de sécurité
-- ✅ Filtrage de contenu malveillant
-- ✅ Protection des secrets
+## ✨ Caractéristiques
 
-**Voir:** [SECURITY_REPORT.md](SECURITY_REPORT.md) pour le rapport complet
+### Architecture professionnelle
+- 🏗️ **Architecture modulaire** : Séparation claire des responsabilités
+- ⚙️ **Configuration centralisée** : Gestion simplifiée des paramètres
+- 🔒 **Sécurité en profondeur** : Rate limiting, validation, anti-raid
+- 📝 **Logging structuré** : Traçabilité complète des actions
+- 🚀 **CI/CD intégré** : GitHub Actions pour l'automatisation
+- 📚 **Documentation complète** : Architecture, déploiement, contribution
+
+### Fonctionnalités
+- ⚡ **Commandes slash modernes** : Interface Discord native
+- 🎯 **Système de bienvenue** : Messages personnalisés et attribution de rôles
+- 🔢 **Calculatrice avancée** : Expressions mathématiques complexes
+- 📢 **Publications automatiques** : Contenu quotidien programmé
+- 🛡️ **Protection anti-abus** : Rate limiting et détection de raids
 
 ## 🌟 Fonctionnalités
 
@@ -125,33 +135,55 @@ npm run dev
 
 ```
 K.Ring/
+├── .github/
+│   └── workflows/
+│       └── ci.yml               # Pipeline CI/CD
+├── config/                      # Configuration JSON
+│   ├── daily-content.json
+│   └── guild-config.json        # Auto-généré
+├── docs/                        # Documentation
+│   ├── ARCHITECTURE.md          # Architecture détaillée
+│   └── DEPLOYMENT.md            # Guide de déploiement
+├── logs/                        # Logs (auto-généré)
 ├── src/
-│   ├── index.js                 # Point d'entrée principal
-│   ├── deploy-commands.js       # Script de déploiement des commandes
 │   ├── commands/                # Commandes slash
-│   │   ├── info.js
 │   │   ├── calc.js
+│   │   ├── info.js
 │   │   ├── setwelcome.js
 │   │   └── status.js
-│   ├── events/                  # Gestionnaires d'événements
+│   ├── config/                  # Configuration centralisée
+│   │   └── index.js
+│   ├── constants/               # Constantes et messages
+│   │   └── messages.js
+│   ├── events/                  # Événements Discord
 │   │   ├── ready.js
 │   │   ├── interactionCreate.js
 │   │   ├── guildMemberAdd.js
 │   │   └── messageCreate.js
-│   └── utils/                   # Utilitaires
-│       ├── logger.js
-│       ├── configManager.js
-│       └── dailyPost.js
-├── config/                      # Fichiers de configuration
-│   ├── daily-content.json       # Contenu des publications quotidiennes
-│   └── guild-config.json        # Configuration par serveur (auto-généré)
-├── logs/                        # Journaux d'activité
+│   ├── security/                # Modules de sécurité
+│   │   ├── antiRaid.js
+│   │   ├── commandSecurity.js
+│   │   ├── inputValidator.js
+│   │   ├── rateLimiter.js
+│   │   └── securityLogger.js
+│   ├── utils/                   # Utilitaires
+│   │   ├── configManager.js
+│   │   ├── dailyPost.js
+│   │   ├── helpers.js
+│   │   └── logger.js
+│   ├── index.js                 # Point d'entrée
+│   └── deploy-commands.js       # Déploiement des commandes
 ├── .env                         # Variables d'environnement (à créer)
-├── .env.example                 # Exemple de configuration
+├── .env.example
+├── .eslintrc.json               # Configuration ESLint
 ├── .gitignore
+├── .prettierrc.json             # Configuration Prettier
+├── CONTRIBUTING.md              # Guide de contribution
 ├── package.json
 └── README.md
 ```
+
+Voir [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) pour plus de détails.
 
 ## 🔧 Configuration avancée
 
@@ -196,36 +228,55 @@ Les logs sont stockés dans le dossier `logs/` :
 
 ## 🚀 Déploiement en production
 
-### Sur un VPS/Serveur dédié
+Plusieurs options de déploiement sont disponibles :
 
-1. Installez Node.js 18+
-2. Clonez le projet
-3. Installez les dépendances : `npm install --production`
-4. Configurez `.env`
-5. Utilisez PM2 pour la gestion du processus :
-
+### VPS / Serveur dédié (Recommandé)
 ```bash
 npm install -g pm2
 pm2 start src/index.js --name k-ring
-pm2 save
-pm2 startup
+pm2 save && pm2 startup
 ```
 
-### Sur Heroku
+### Plateformes Cloud
+- **Railway** : Déploiement automatique depuis GitHub
+- **Render** : Background worker avec auto-restart
+- **Docker** : Container prêt à l'emploi
 
-1. Créez une application Heroku
-2. Ajoutez les variables d'environnement dans Settings > Config Vars
-3. Déployez via Git ou GitHub integration
+**Guide complet** : [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 
-### Sur Railway/Render
+## 🛠️ Développement
 
-1. Connectez votre repository
-2. Configurez les variables d'environnement
-3. Le déploiement se fait automatiquement
+### Scripts disponibles
+
+```bash
+npm start              # Démarrer le bot
+npm run dev            # Mode développement (auto-reload)
+npm run deploy         # Déployer les commandes slash
+npm run lint           # Vérifier le code
+npm run lint:fix       # Corriger automatiquement
+npm run format         # Formater le code
+npm run validate       # Valider tout (format + lint)
+```
+
+### Ajouter une commande
+
+1. Créez `src/commands/macommande.js`
+2. Suivez le pattern des commandes existantes
+3. Le système de chargement l'intègre automatiquement
+
+Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour plus de détails.
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! N'hésitez pas à ouvrir des issues ou pull requests.
+Les contributions sont les bienvenues ! 
+
+1. Fork le projet
+2. Créez une branche (`git checkout -b feature/AmazingFeature`)
+3. Committez vos changements (`git commit -m 'feat: add AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrez une Pull Request
+
+Consultez [CONTRIBUTING.md](CONTRIBUTING.md) pour les guidelines complètes.
 
 ## 📄 Licence
 

@@ -5,25 +5,16 @@
  */
 
 import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
-import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import config from './config/index.js';
 import logger from './utils/logger.js';
 import { initDailyPost } from './utils/dailyPost.js';
 
 // Configuration ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Charger les variables d'environnement
-dotenv.config();
-
-// Vérifier que le token est présent
-if (!process.env.DISCORD_TOKEN) {
-    logger.error('DISCORD_TOKEN manquant dans le fichier .env');
-    process.exit(1);
-}
 
 // Créer le client Discord avec les intents nécessaires
 const client = new Client({
@@ -150,7 +141,7 @@ async function init() {
 
         // Connexion au bot Discord
         logger.info('Connexion à Discord...');
-        await client.login(process.env.DISCORD_TOKEN);
+        await client.login(config.discord.token);
 
     } catch (error) {
         logger.error('Erreur lors de l\'initialisation du bot', error);

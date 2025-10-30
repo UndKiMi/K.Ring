@@ -4,24 +4,15 @@
  */
 
 import { REST, Routes } from 'discord.js';
-import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import config from './config/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Charger les variables d'environnement
-dotenv.config();
-
-const { DISCORD_TOKEN, CLIENT_ID, GUILD_ID } = process.env;
-
-// Vérifier les variables requises
-if (!DISCORD_TOKEN || !CLIENT_ID) {
-    console.error('❌ DISCORD_TOKEN et CLIENT_ID sont requis dans le fichier .env');
-    process.exit(1);
-}
+const { token, clientId, guildId } = config.discord;
 
 const commandsPath = path.join(__dirname, 'commands');
 
@@ -61,18 +52,18 @@ const commands = loadedCommands.filter(cmd => cmd !== null);
 console.log(`\n📊 Total: ${commands.length} commande(s) à déployer\n`);
 
 // Créer une instance REST
-const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
+const rest = new REST({ version: '10' }).setToken(token);
 
 try {
     console.log('🚀 Déploiement des commandes slash...\n');
 
     let data;
 
-    if (GUILD_ID) {
+    if (guildId) {
         // Déploiement sur un serveur spécifique (instantané, pour les tests)
-        console.log(`📍 Déploiement sur le serveur ${GUILD_ID} (mode test)`);
+        console.log(`📍 Déploiement sur le serveur ${guildId} (mode test)`);
         data = await rest.put(
-            Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
+            Routes.applicationGuildCommands(clientId, guildId),
             { body: commands }
         );
         console.log(`✅ ${data.length} commande(s) déployée(s) sur le serveur de test`);
@@ -80,7 +71,7 @@ try {
         // Déploiement global (peut prendre jusqu'à 1 heure)
         console.log('🌍 Déploiement global (peut prendre jusqu\'à 1 heure)');
         data = await rest.put(
-            Routes.applicationCommands(CLIENT_ID),
+            Routes.applicationCommands(clientId),
             { body: commands }
         );
         console.log(`✅ ${data.length} commande(s) déployée(s) globalement`);
