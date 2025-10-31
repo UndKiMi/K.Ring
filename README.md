@@ -1,7 +1,6 @@
 # K.Ring
 
-> Bot Discord modulaire inspiré d'Alan Turing
-
+> Bot Discord modulaire
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![Discord.js](https://img.shields.io/badge/discord.js-v14-blue)](https://discord.js.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
