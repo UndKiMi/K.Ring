@@ -32,6 +32,7 @@ const client = new Client({
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildPresences, // Pour voir le statut en temps réel
     ],
     partials: [
         Partials.Channel,

@@ -90,7 +90,19 @@ export default {
             }
 
             // ========================================
-            // ÉTAPE 2 : ÉVALUATION AVEC TIMEOUT
+            // ÉTAPE 2 : PRÉPARATION DE L'EXPRESSION
+            // ========================================
+            
+            // Remplacer 'x' par '*' pour la multiplication (notation courante)
+            // Attention : on ne remplace que 'x' entouré d'espaces ou de chiffres
+            let processedExpression = expression
+                .replace(/(\d)\s*x\s*(\d)/gi, '$1 * $2')  // 5 x 3 -> 5 * 3
+                .replace(/(\))\s*x\s*(\()/gi, '$1 * $2')  // ) x ( -> ) * (
+                .replace(/(\))\s*x\s*(\d)/gi, '$1 * $2')  // ) x 5 -> ) * 5
+                .replace(/(\d)\s*x\s*(\()/gi, '$1 * $2'); // 5 x ( -> 5 * (
+
+            // ========================================
+            // ÉTAPE 3 : ÉVALUATION AVEC TIMEOUT
             // ========================================
             
             let result;
@@ -107,7 +119,7 @@ export default {
 
                 try {
                     // Évaluer l'expression de manière sécurisée
-                    const evalResult = math.evaluate(expression);
+                    const evalResult = math.evaluate(processedExpression);
                     
                     clearTimeout(timeoutId);
                     resolve(evalResult);
@@ -154,7 +166,7 @@ export default {
             }
 
             // ========================================
-            // ÉTAPE 3 : FORMATAGE DU RÉSULTAT
+            // ÉTAPE 4 : FORMATAGE DU RÉSULTAT
             // ========================================
             
             let formattedResult;
@@ -183,7 +195,7 @@ export default {
             }
 
             // ========================================
-            // ÉTAPE 4 : AFFICHAGE DU RÉSULTAT
+            // ÉTAPE 5 : AFFICHAGE DU RÉSULTAT
             // ========================================
             
             // Tronquer l'expression si trop longue pour l'embed

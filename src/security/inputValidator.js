@@ -194,8 +194,8 @@ class InputValidator {
      * @returns {Object}
      */
     validateMathExpression(expression) {
-        // Patterns autorisés pour les calculs
-        const allowedPattern = /^[\d\s+\-*\/().,^%pielog\[\]sqrtsincotan]+$/i;
+        // Patterns autorisés pour les calculs (inclut x pour multiplication)
+        const allowedPattern = /^[\d\s+\-*\/().,^%xpielog\[\]sqrtsincotan]+$/i;
         
         if (!allowedPattern.test(expression)) {
             return {
