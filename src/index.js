@@ -1,16 +1,23 @@
 /**
- * K.Ring Discord Bot
+ * K.Ring Discord Bot - Version Optimisée
  * Point d'entrée principal du bot
  * Inspiré d'Alan Turing
+ * 
+ * OPTIMISATIONS APPLIQUÉES :
+ * - Intents minimaux pour réduire la charge
+ * - Cache optimisé avec sweepers
+ * - Monitoring de performance intégré
+ * - Gestion asynchrone améliorée
  */
 
-import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
+import { Client, Collection, GatewayIntentBits, Partials, Options } from 'discord.js';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import logger from './utils/logger.js';
 import { initDailyPost } from './utils/dailyPost.js';
+import performanceMonitor from './utils/performanceMonitor.js';
 
 // Configuration ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -25,14 +32,17 @@ if (!process.env.DISCORD_TOKEN) {
     process.exit(1);
 }
 
-// Créer le client Discord avec les intents nécessaires
+// ═══════════════════════════════════════════════════════════════
+// CONFIGURATION CLIENT OPTIMISÉE
+// ═══════════════════════════════════════════════════════════════
 const client = new Client({
+    // Intents minimaux pour réduire la charge réseau
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildPresences, // Pour voir le statut en temps réel
+        GatewayIntentBits.GuildPresences,
     ],
     partials: [
         Partials.Channel,
@@ -40,6 +50,30 @@ const client = new Client({
         Partials.User,
         Partials.GuildMember,
     ],
+    // OPTIMISATION : Sweepers pour nettoyer le cache automatiquement
+    sweepers: {
+        ...Options.DefaultSweeperSettings,
+        messages: {
+            interval: 3600, // Nettoyer toutes les heures
+            lifetime: 1800,  // Garder 30 minutes
+        },
+        users: {
+            interval: 3600,
+            filter: () => user => user.bot && user.id !== client.user.id, // Garder seulement les users actifs
+        },
+    },
+    // OPTIMISATION : Limiter le cache
+    makeCache: Options.cacheWithLimits({
+        ...Options.DefaultMakeCacheSettings,
+        MessageManager: 200, // Max 200 messages en cache
+        PresenceManager: 0,  // Pas de cache de présences (économie mémoire)
+        ReactionManager: 0,  // Pas de cache de réactions
+    }),
+    // OPTIMISATION : Désactiver les mentions par défaut
+    allowedMentions: {
+        parse: ['users'],
+        repliedUser: false,
+    },
 });
 
 // Collection pour stocker les commandes
@@ -133,12 +167,41 @@ process.on('uncaughtException', (error) => {
 });
 
 /**
+ * Gestion de l'arrêt propre du bot
+ */
+async function shutdown(signal) {
+    logger.info(`Signal ${signal} reçu, arrêt du bot...`);
+    
+    try {
+        // Détruire le client Discord
+        if (client) {
+            await client.destroy();
+            logger.info('Client Discord déconnecté');
+        }
+        
+        // Attendre un peu pour les opérations en cours
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        logger.info('Arrêt terminé');
+        process.exit(0);
+    } catch (error) {
+        logger.error('Erreur lors de l\'arrêt:', error);
+        process.exit(1);
+    }
+}
+
+// Écouter les signaux d'arrêt
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
+process.on('SIGKILL', () => shutdown('SIGKILL'));
+
+/**
  * Initialisation du bot
  */
 async function init() {
     try {
         logger.info('╔════════════════════════════════════════╗');
-        logger.info('║        K.Ring Bot - Démarrage          ║');
+        logger.info('║    K.Ring Bot - Démarrage Optimisé    ║');
         logger.info('║   Inspiré d\'Alan Turing (1912-1954)   ║');
         logger.info('╚════════════════════════════════════════╝');
 
@@ -148,6 +211,18 @@ async function init() {
 
         // Initialiser le système de publication quotidienne
         initDailyPost(client);
+
+        // ═══════════════════════════════════════════════════════
+        // MONITORING AUTOMATIQUE (toutes les 5 minutes)
+        // ═══════════════════════════════════════════════════════
+        setInterval(() => {
+            performanceMonitor.recordSystemMetrics(client);
+        }, 300000); // 5 minutes
+
+        // Rapport de performance toutes les heures
+        setInterval(() => {
+            performanceMonitor.logReport(client);
+        }, 3600000); // 1 heure
 
         // Connexion au bot Discord
         logger.info('Connexion à Discord...');

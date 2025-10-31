@@ -1,12 +1,18 @@
 /**
- * Événement interactionCreate
+ * Événement interactionCreate - Version Optimisée
  * Gère toutes les interactions (commandes slash, boutons, menus, etc.)
- * SÉCURITÉ: Intègre toutes les vérifications de sécurité avant exécution
+ * 
+ * OPTIMISATIONS :
+ * - Monitoring de latence intégré
+ * - Exécution asynchrone optimisée
+ * - Gestion d'erreurs améliorée
  */
 
+import { MessageFlags } from 'discord.js';
 import logger from '../utils/logger.js';
 import commandSecurity from '../security/commandSecurity.js';
 import securityLogger from '../security/securityLogger.js';
+import performanceMonitor from '../utils/performanceMonitor.js';
 
 export default {
     name: 'interactionCreate',
@@ -23,6 +29,9 @@ export default {
             return;
         }
 
+        // OPTIMISATION : Mesurer la latence
+        const startTime = Date.now();
+
         try {
             // SÉCURITÉ: Vérifier toutes les conditions de sécurité
             const securityCheck = await commandSecurity.checkSecurity(interaction);
@@ -31,7 +40,7 @@ export default {
                 // Bloquer la commande et informer l'utilisateur
                 await interaction.reply({
                     content: securityCheck.reason,
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 });
                 return;
             }
@@ -51,6 +60,10 @@ export default {
             // Exécuter la commande
             await command.execute(interaction);
             
+            // OPTIMISATION : Enregistrer la latence
+            const latency = Date.now() - startTime;
+            performanceMonitor.recordCommand(interaction.commandName, latency);
+            
         } catch (error) {
             logger.error(`Erreur lors de l'exécution de /${interaction.commandName}`, error);
             
@@ -63,7 +76,7 @@ export default {
 
             const errorMessage = {
                 content: '❌ Une erreur est survenue lors de l\'exécution de cette commande.',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             };
 
             try {

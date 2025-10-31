@@ -1,13 +1,15 @@
 /**
- * Événement ready
+ * Événement clientReady (anciennement ready)
  * Déclenché lorsque le bot est connecté et prêt
+ * 
+ * CORRECTION: Utilise 'clientReady' au lieu de 'ready' pour Discord.js v15+
  */
 
 import { ActivityType } from 'discord.js';
 import logger from '../utils/logger.js';
 
 export default {
-    name: 'ready',
+    name: 'clientReady',
     once: true,
 
     execute(client) {

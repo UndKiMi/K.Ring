@@ -3,7 +3,7 @@
  * Affiche les statistiques et fonctionnalités du bot
  */
 
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, MessageFlags } from 'discord.js';
 import logger from '../utils/logger.js';
 import configManager from '../utils/configManager.js';
 
@@ -97,10 +97,14 @@ export default {
                     {
                         name: '📝 Commandes Disponibles',
                         value: [
-                            '`/info [sujet]` - Publier une information',
-                            '`/calc [expression]` - Calculatrice',
+                            '`/annonce [sujet]` - Publier une actualité',
+                            '`/calc [expression]` - Calculatrice avancée',
+                            '`/userinfo [@user]` - Infos utilisateur',
+                            '`/serverinfo` - Infos serveur',
                             '`/setwelcome [role]` - Config bienvenue (Admin)',
-                            '`/status` - Afficher ce statut'
+                            '`/monitor` - Performance (Admin)',
+                            '`/status` - Afficher ce statut',
+                            '`/help` - Aide complète'
                         ].join('\n'),
                         inline: false
                     }
@@ -121,9 +125,15 @@ export default {
             const errorMessage = '❌ Une erreur est survenue lors de la récupération du statut.';
             
             if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({ content: errorMessage, ephemeral: true });
+                await interaction.followUp({ 
+                    content: errorMessage, 
+                    flags: MessageFlags.Ephemeral 
+                });
             } else {
-                await interaction.reply({ content: errorMessage, ephemeral: true });
+                await interaction.reply({ 
+                    content: errorMessage, 
+                    flags: MessageFlags.Ephemeral 
+                });
             }
         }
     }

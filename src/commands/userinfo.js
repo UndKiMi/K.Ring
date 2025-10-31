@@ -198,10 +198,33 @@ export default {
 
             // ═══════════════════════════════════════════════════════
             // RÉCUPÉRATION DES DONNÉES
+            // CORRECTION: Détection fiable du statut en 2025
             // ═══════════════════════════════════════════════════════
 
-            const status = member.presence?.status || 'offline';
             const isBot = targetUser.bot;
+            
+            // Détection du statut avec fallback robuste
+            let status = 'offline';
+            if (member.presence) {
+                status = member.presence.status;
+                // Discord.js v14+ : vérifier aussi clientStatus pour plus de précision
+                if (member.presence.clientStatus) {
+                    // Si connecté sur au moins un client (web, mobile, desktop)
+                    const clients = Object.values(member.presence.clientStatus);
+                    if (clients.length > 0) {
+                        // Prendre le statut le plus "actif"
+                        if (clients.includes('online')) status = 'online';
+                        else if (clients.includes('idle')) status = 'idle';
+                        else if (clients.includes('dnd')) status = 'dnd';
+                    }
+                }
+            }
+            
+            // Pour les bots, vérifier aussi s'ils sont actifs
+            if (isBot && !member.presence) {
+                // Si le bot est dans le cache et répond, il est probablement online
+                status = 'online';
+            }
             
             // Calculer les âges
             const accountAge = getAccountAge(targetUser.createdTimestamp);
@@ -258,148 +281,119 @@ export default {
             };
 
             // ═══════════════════════════════════════════════════════
-            // CONSTRUCTION DE L'EMBED PREMIUM
+            // CONSTRUCTION DE L'EMBED COMPACT
             // ═══════════════════════════════════════════════════════
 
             const userInfoEmbed = new EmbedBuilder()
                 .setColor(getStatusColor(status, member.displayHexColor))
                 .setAuthor({
-                    name: `${targetUser.username} ${avatarInfo.hasNitro ? '✨' : ''}`,
-                    iconURL: avatarInfo.url
+                    name: `${targetUser.username}`,
+                    iconURL: targetUser.displayAvatarURL({ dynamic: true, size: 128 })
                 })
-                .setDescription(`${getStatusPhrase(status, isBot)}\n\n${avatarInfo.indicator}`)
-                .setThumbnail(avatarInfo.url)
+                .setDescription(getStatusPhrase(status, isBot))
+                .setThumbnail(targetUser.displayAvatarURL({ dynamic: true, size: 512 }))
                 
-                // ═══ SECTION IDENTITÉ ═══
+                // SECTION : IDENTITÉ (sans emoji, avec ":" et souligné)
                 .addFields({
-                    name: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-                    value: '**👤 IDENTITÉ**',
+                    name: '▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬',
+                    value: '**__IDENTITÉ :__**',
+                    inline: false
+                })
+                .addFields({
+                    name: '🆔 Identifiant',
+                    value: `\`${targetUser.id}\``,
                     inline: false
                 })
                 .addFields(
                     {
-                        name: '🆔 Identifiant',
-                        value: `\`\`\`${targetUser.id}\`\`\``,
-                        inline: true
-                    },
-                    {
                         name: '📛 Pseudo serveur',
-                        value: member.nickname ? `**${member.nickname}**` : '*Aucun pseudo*',
+                        value: member.nickname || '*Aucun*',
                         inline: true
                     },
                     {
                         name: '🏷️ Tag Discord',
-                        value: `**${targetUser.tag}**`,
+                        value: `${targetUser.tag}`,
                         inline: true
                     }
                 )
                 
-                // ═══ SECTION STATUT ═══
+                // SECTION : STATUT & PRÉSENCE (sans emoji, avec ":" et souligné)
                 .addFields({
-                    name: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-                    value: '**📊 STATUT & PRÉSENCE**',
+                    name: '▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬',
+                    value: '**__STATUT & PRÉSENCE :__**',
                     inline: false
                 })
                 .addFields(
                     {
-                        name: '💫 Statut actuel',
-                        value: `${statusEmojis[status] || '⚫'} **${statusLabels[status] || 'Hors ligne'}**`,
+                        name: '💫 Statut',
+                        value: `${statusEmojis[status] || '⚫'} ${statusLabels[status] || 'Hors ligne'}`,
                         inline: true
                     },
                     {
                         name: '🎮 Activité',
-                        value: member.presence?.activities?.[0]?.name || '*Aucune activité*',
+                        value: member.presence?.activities?.[0]?.name || '*Aucune*',
                         inline: true
                     },
                     {
-                        name: '👤 Type de compte',
-                        value: isBot ? '**Bot** 🤖' : '**Utilisateur** 👤',
+                        name: '👤 Type',
+                        value: isBot ? 'Bot 🤖' : 'User 👤',
                         inline: true
                     }
                 )
                 
-                // ═══ SECTION RÔLE PRINCIPAL ═══
+                // SECTION : HISTORIQUE (sans emoji, avec ":" et souligné)
                 .addFields({
-                    name: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-                    value: '**👑 RÔLE PRINCIPAL**',
-                    inline: false
-                })
-                .addFields({
-                    name: `${highestRole.emoji} ${highestRole.type}`,
-                    value: [
-                        `**Nom:** \`${highestRole.name}\``,
-                        `**Type:** ${highestRole.description}`,
-                        `**Position:** #${highestRole.position}`,
-                        `**Couleur:** ${highestRole.color}`
-                    ].join('\n'),
-                    inline: false
-                })
-                
-                // ═══ SECTION BADGES DISCORD ═══
-                .addFields({
-                    name: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-                    value: '**🏆 BADGES DISCORD**',
-                    inline: false
-                })
-                .addFields({
-                    name: '⠀',
-                    value: userBadges,
-                    inline: false
-                })
-                
-                // ═══ SECTION DATES ═══
-                .addFields({
-                    name: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-                    value: '**📅 HISTORIQUE**',
+                    name: '▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬',
+                    value: '**__HISTORIQUE :__**',
                     inline: false
                 })
                 .addFields(
                     {
-                        name: '🎂 Compte créé',
-                        value: `<t:${Math.floor(targetUser.createdTimestamp / 1000)}:D>\n*Il y a ${accountAge}*`,
+                        name: '🎂 Créé',
+                        value: `<t:${Math.floor(targetUser.createdTimestamp / 1000)}:D>\n*${accountAge}*`,
                         inline: true
                     },
                     {
-                        name: '📥 A rejoint le serveur',
-                        value: `<t:${Math.floor(member.joinedTimestamp / 1000)}:D>\n*Il y a ${memberAge}*`,
+                        name: '📥 Rejoint',
+                        value: `<t:${Math.floor(member.joinedTimestamp / 1000)}:D>\n*${memberAge}*`,
                         inline: true
                     },
                     {
-                        name: '📊 Position d\'arrivée',
-                        value: `**#${Array.from(interaction.guild.members.cache.values())
+                        name: '📊 Position',
+                        value: `#${Array.from(interaction.guild.members.cache.values())
                             .sort((a, b) => a.joinedTimestamp - b.joinedTimestamp)
-                            .findIndex(m => m.id === member.id) + 1}** / ${interaction.guild.memberCount}`,
+                            .findIndex(m => m.id === member.id) + 1}/${interaction.guild.memberCount}`,
                         inline: true
                     }
                 )
                 
-                // ═══ SECTION RÔLES ═══
+                // SECTION : RÔLES (sans emoji, avec ":" et souligné)
                 .addFields({
-                    name: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-                    value: `**🎭 RÔLES** • \`${rolesFiltered.size}\` rôle${rolesFiltered.size > 1 ? 's' : ''}`,
+                    name: '▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬',
+                    value: `**__RÔLES :__** (${rolesFiltered.size})`,
                     inline: false
                 })
                 .addFields({
-                    name: '⠀', // Espace invisible pour le design
-                    value: roleDisplay,
+                    name: '\u200B',
+                    value: roleDisplay || '*Aucun rôle*',
                     inline: false
                 })
                 
-                // ═══ SECTION PERMISSIONS ═══
+                // SECTION : PERMISSIONS (sans emoji, avec ":" et souligné)
                 .addFields({
-                    name: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-                    value: '**🔐 PERMISSIONS CLÉS**',
+                    name: '▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬',
+                    value: '**__PERMISSIONS CLÉS :__**',
                     inline: false
                 })
                 .addFields({
-                    name: '⠀',
+                    name: '\u200B',
                     value: [
-                        member.permissions.has('Administrator') ? '✅ Administrateur' : '❌ Administrateur',
-                        member.permissions.has('ManageGuild') ? '✅ Gérer le serveur' : '❌ Gérer le serveur',
-                        member.permissions.has('ManageChannels') ? '✅ Gérer les salons' : '❌ Gérer les salons',
-                        member.permissions.has('ManageRoles') ? '✅ Gérer les rôles' : '❌ Gérer les rôles',
-                        member.permissions.has('KickMembers') ? '✅ Expulser des membres' : '❌ Expulser des membres',
-                        member.permissions.has('BanMembers') ? '✅ Bannir des membres' : '❌ Bannir des membres'
+                        member.permissions.has('Administrator') ? '✅ Admin' : '❌ Admin',
+                        member.permissions.has('ManageGuild') ? '✅ Gérer serveur' : '❌ Gérer serveur',
+                        member.permissions.has('ManageChannels') ? '✅ Gérer salons' : '❌ Gérer salons',
+                        member.permissions.has('ManageRoles') ? '✅ Gérer rôles' : '❌ Gérer rôles',
+                        member.permissions.has('KickMembers') ? '✅ Expulser' : '❌ Expulser',
+                        member.permissions.has('BanMembers') ? '✅ Bannir' : '❌ Bannir'
                     ].join('\n'),
                     inline: false
                 })

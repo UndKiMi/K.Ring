@@ -3,7 +3,7 @@
  * Affiche l'aide et la liste des commandes disponibles
  */
 
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, MessageFlags } from 'discord.js';
 import logger from '../utils/logger.js';
 
 export default {
@@ -25,8 +25,8 @@ export default {
                         inline: false
                     },
                     {
-                        name: '📢 /info [sujet]',
-                        value: 'Publier une information dans #infos\n• Crée le salon automatiquement si absent\n• Embed professionnel\n• Exemple : `/info Réunion demain à 15h`',
+                        name: '📢 /annonce [sujet] [commentaire]',
+                        value: 'Rechercher et publier une actualité\n• Recherche automatique d\'actualités\n• Détection de catégories (Tech, Sport, etc.)\n• Commentaire admin optionnel\n• Exemple : `/annonce sujet:technologie`',
                         inline: false
                     },
                     {
@@ -35,8 +35,23 @@ export default {
                         inline: false
                     },
                     {
+                        name: '👤 /userinfo [utilisateur]',
+                        value: 'Afficher les informations d\'un utilisateur\n• Statut en temps réel\n• Historique et rôles\n• Permissions clés\n• Exemple : `/userinfo @User`',
+                        inline: false
+                    },
+                    {
+                        name: '🏰 /serverinfo',
+                        value: 'Afficher les informations du serveur\n• Statistiques complètes\n• Membres et rôles\n• Configuration',
+                        inline: false
+                    },
+                    {
                         name: '📊 /status',
                         value: 'Afficher les statistiques du bot\n• Informations système\n• Fonctionnalités actives\n• Configuration du serveur',
+                        inline: false
+                    },
+                    {
+                        name: '🔍 /monitor [action]',
+                        value: 'Monitoring de performance (Admin)\n• Métriques en temps réel\n• Latence des commandes\n• Utilisation ressources',
                         inline: false
                     },
                     {
@@ -64,7 +79,10 @@ export default {
                 })
                 .setTimestamp();
 
-            await interaction.reply({ embeds: [helpEmbed], ephemeral: true });
+            await interaction.reply({ 
+                embeds: [helpEmbed], 
+                flags: MessageFlags.Ephemeral 
+            });
 
             logger.info(`Commande /help exécutée par ${interaction.user.tag}`);
 
@@ -74,9 +92,15 @@ export default {
             const errorMessage = '❌ Une erreur est survenue lors de l\'affichage de l\'aide.';
             
             if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({ content: errorMessage, ephemeral: true });
+                await interaction.followUp({ 
+                    content: errorMessage, 
+                    flags: MessageFlags.Ephemeral 
+                });
             } else {
-                await interaction.reply({ content: errorMessage, ephemeral: true });
+                await interaction.reply({ 
+                    content: errorMessage, 
+                    flags: MessageFlags.Ephemeral 
+                });
             }
         }
     }

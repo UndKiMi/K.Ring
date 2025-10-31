@@ -60,8 +60,8 @@ class SecurityLogger {
         const color = level === 'CRITICAL' ? '\x1b[31m' : level === 'WARNING' ? '\x1b[33m' : '\x1b[36m';
         console.log(`${color}[SECURITY ${level}] ${type}: ${JSON.stringify(data)}\x1b[0m`);
 
-        // Tracker les incidents par utilisateur
-        if (data.userId) {
+        // Tracker les incidents par utilisateur (sauf pour les logs de tracking eux-mêmes)
+        if (data.userId && type !== 'BAN_RECOMMENDED' && type !== 'USER_FLAGGED') {
             this.trackUserIncident(data.userId, level);
         }
     }
