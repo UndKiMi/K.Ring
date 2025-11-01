@@ -10,5 +10,4 @@
 - **Commandes slash** : `/info`, `/calc`, `/setwelcome`, `/status`
 - **Système de bienvenue** : Attribution automatique de rôles
 - **Calculatrice avancée** : Expressions mathématiques complexes
-- **Publications quotidiennes** : Contenu programmé
 - **Sécurité** : Rate limiting, anti-raid, validation des entrées
